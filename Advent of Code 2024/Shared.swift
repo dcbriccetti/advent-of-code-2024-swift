@@ -2,6 +2,11 @@ import Foundation
 
 let path = "/Users/daveb/devel/Advent-of-Code/AOC-2024/Advent of Code 2024/data/"
 
+enum Part {
+    case part1
+    case part2
+}
+
 // Read a file and parse its contents into a 2D array of Ints
 func readFileTo2DArray(from filename: String) throws -> [[Int]] {
     let fileContents = try String(contentsOfFile: filename, encoding: .utf8)
