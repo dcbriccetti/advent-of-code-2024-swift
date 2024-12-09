@@ -3,17 +3,11 @@ func day3(for part: Part) throws {
     let matches = data.matches(of: /mul\((\d+)\,(\d+)\)|(do\(\))|(don't\(\))/)
     var insideDont = false
     let sum = matches.compactMap { match -> Int? in
-        let includeThisMul = part == .part1 || !insideDont
-        if includeThisMul && match.0.starts(with: "mul") {
-            return Int(match.1!)! * Int(match.2!)!
+        if match.0.starts(with: "mul") {
+            return part == .part1 || !insideDont ? Int(match.1!)! * Int(match.2!)! : nil
         }
-        if match.0.starts(with: "don't(") {
-            insideDont = true
-        } else if match.0.starts(with: "do(") {
-            insideDont = false
-        }
+        insideDont = match.0.starts(with: "don't(") // True if “don't”; false if “do”
         return nil
     }.reduce(0, +)
-
     print(sum)
 }
