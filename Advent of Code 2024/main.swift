@@ -1,2 +1,2 @@
 try day4(for: .part1)
-//try day4(for: .part2)
+try day4(for: .part2)
