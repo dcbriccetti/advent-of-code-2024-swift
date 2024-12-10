@@ -9,6 +9,19 @@ func day6(for part: Part) throws {
         let x: Int
     }
 
+    enum Direction: Int, CaseIterable {
+        case up, right, down, left
+
+        func toRight() -> Direction {
+            return Direction(rawValue: (self.rawValue + 1) % Direction.allCases.count)!
+        }
+    }
+
+    struct Visit: Hashable {
+        let pos: CoordPair
+        let direction: Direction
+    }
+
     let (startingGuardPosition, obstacles) = lines.enumerated()
         .reduce(into: (guardPos: CoordPair(y: 0, x: 0), obstacles: Set<CoordPair>())) { result, row in
         let (rowIndex, line) = row
@@ -24,22 +37,27 @@ func day6(for part: Part) throws {
     var guardPosition = startingGuardPosition
 
     let deltas = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-    var direction = 0
-    var visited = Set<CoordPair>()
+    var direction = Direction.up
+    var visited = Set<Visit>()
 
     while true {
-        visited.insert(guardPosition)
-        let nextRowIndex = guardPosition.y + deltas[direction].0
-        let nextColIndex = guardPosition.x + deltas[direction].1
+        let visit = Visit(pos: guardPosition, direction: direction)
+        if visited.contains(visit) {
+            print("Found loop")
+            break
+        }
+        visited.insert(visit)
+        let nextRowIndex = guardPosition.y + deltas[direction.rawValue].0
+        let nextColIndex = guardPosition.x + deltas[direction.rawValue].1
         if nextRowIndex < 0 || nextRowIndex >= numRows || nextColIndex < 0 || nextColIndex >= numCols {
             break
         }
         let nextPos = CoordPair(y: nextRowIndex, x: nextColIndex)
         if obstacles.contains(nextPos) {
-            direction = (direction + 1) % deltas.count
+            direction = direction.toRight()
         } else {
             guardPosition = nextPos
         }
     }
-    print(visited.count)
+    print(Set(visited.map(\.pos)).count)
 }
