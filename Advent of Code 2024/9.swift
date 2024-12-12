@@ -6,41 +6,43 @@ func day9(for part: Part) throws {
         var active = true
     }
     let chars = try String(contentsOfFile: path + "/9-test.txt", encoding: .utf8)
-    let blockCounts = chars.compactMap { $0.wholeNumberValue } // compactMap to ignore \n at end
+    let blockCounts = chars.compactMap(\.wholeNumberValue) // compactMap to ignore \n at end
     var fileId = 0
-    var filesMap = [Int?]()
+    var part1FileSystem = [Int?]() // Ints are file IDs; nils are free blocks
     var freeBlocks = [Block]()
     var files = [Block]()
-    var isFreeBlock = false
     var position = 0
 
-    for blockCount in blockCounts {
-        let num: Int? = isFreeBlock ? nil : fileId
-        filesMap.append(contentsOf: Array(repeating: num, count: blockCount))
-        let block = Block(id: fileId, position: position, length: blockCount)
-        if isFreeBlock {
-            freeBlocks.append(block)
+    for (index, blockCount) in blockCounts.enumerated() {
+        let isFreeBlock = index % 2 == 1
+        if part == .part1 {
+            let num: Int? = isFreeBlock ? nil : fileId
+            part1FileSystem.append(contentsOf: Array(repeating: num, count: blockCount))
         } else {
-            files.append(block)
+            let block = Block(id: fileId, position: position, length: blockCount)
+            if isFreeBlock {
+                freeBlocks.append(block)
+            } else {
+                files.append(block)
+            }
         }
         if !isFreeBlock {
             fileId += 1
         }
-        isFreeBlock.toggle()
         position += blockCount
     }
-    printMap(filesMap)
+    printMap(part1FileSystem)
 
     var done = false
 
     if part == .part1 {
         while !done {
-            let right = filesMap.lastIndex { $0 != nil }!
-            let left = filesMap.firstIndex { $0 == nil }!
+            let right = part1FileSystem.lastIndex { $0 != nil }!
+            let left = part1FileSystem.firstIndex { $0 == nil }!
             if right > left {
-                filesMap[left] = filesMap[right]
-                filesMap[right] = nil
-                printMap(filesMap)
+                part1FileSystem[left] = part1FileSystem[right]
+                part1FileSystem[right] = nil
+                printMap(part1FileSystem)
             } else {
                 done = true
             }
@@ -49,18 +51,17 @@ func day9(for part: Part) throws {
         for i in (0..<files.count).reversed() { // Iterate in reversed order
             let file = files[i]
             if let targetIndex = freeBlocks.firstIndex(where: { $0.length >= file.length && $0.active }) {
-                var block = freeBlocks[targetIndex] // Store the block in a variable
+                var block = freeBlocks[targetIndex]
                 files[i].position = block.position
                 print("Moving file \(file.id) (len: \(file.length)) to position \(files[i].position)")
 
-                if block.length == file.length {
+                if block.length == file.length { // Free block is completely filled
                     block.active = false
-                } else {
+                } else { // Free block is partially filled
                     block.length -= file.length
                     block.position += file.length
                 }
 
-                // Update the free block back into the array
                 freeBlocks[targetIndex] = block
             } else {
                 print("No space found for \(file.id) (len: \(file.length))")
@@ -68,20 +69,20 @@ func day9(for part: Part) throws {
         }
     }
 
-    let checksum = part == .part1
-        ? filesMap.enumerated().reduce(0) { (result, enumeratedItem) in
+    if part == .part2 { // Build the part 1 file system to use the same code for the checksum
+        part1FileSystem = Array.init(repeating: nil, count: position)
+        files.forEach { file in
+            for offset in 0..<file.length {
+                part1FileSystem[file.position + offset] = file.id
+            }
+        }
+    }
+
+    let checksum =
+        part1FileSystem.enumerated().reduce(0) { (result, enumeratedItem) in
             let (position, fileId) = enumeratedItem
             return result + (fileId ?? 0) * position
         }
-        : files
-            .map { file in
-                (0..<file.length)
-                    .map { offset in
-                        (file.position + offset) * file.id
-                    }
-                    .reduce(0, +)
-            }
-            .reduce(0, +)
     print(checksum)
 }
 
