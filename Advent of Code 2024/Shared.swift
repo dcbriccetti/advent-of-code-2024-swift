@@ -7,6 +7,11 @@ enum Part {
     case part2
 }
 
+struct CoordPair: Hashable {
+    let y: Int
+    let x: Int
+}
+
 // Read a file and parse its contents into a 2D array of Ints
 func readFileTo2DArray(from filename: String) throws -> [[Int]] {
     let fileContents = try String(contentsOfFile: filename, encoding: .utf8)
