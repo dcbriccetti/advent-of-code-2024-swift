@@ -1,31 +1,35 @@
-func day11(for part: Part) throws {
-//    let input = "125 17"
-    let input = "965842 9159 3372473 311 0 6 86213 48"
-    var stones = input
+func day11() throws {
+    let input = "125 17"
+    var stoneCounts = [Int : Int]()
+    input
         .split(separator: " ")
-        .map { Int($0)! }
+        .forEach { numString in
+            let stone = Int(numString)!
+            stoneCounts[stone, default: 0] += 1
+        }
 
-    for i in 1...25 {
-        print(i, stones.count)
-        stones = blink(stones)
+    for i in 1...75 {
+        stoneCounts = blink(stoneCounts)
+        print(i, stoneCounts.count, stoneCounts.values.reduce(0, +)/*, stoneCounts*/)
     }
-    print(stones.count)
 
-    func blink(_ stones: [Int]) -> [Int] {
-        var newStones = [Int]()
-        for stone in stones {
+    func blink(_ stoneCounts: [Int : Int]) -> [Int : Int] {
+        var newStoneCounts = [Int : Int]()
+        for (stone, count) in stoneCounts {
             let stoneDigits = String(stone)
             let numDigits = stoneDigits.count
             if stone == 0 {
-                newStones.append(1)
+                newStoneCounts[1, default: 0] += count
             } else if numDigits % 2 == 0 {
-                newStones.append(Int(stoneDigits.prefix(numDigits / 2))!)
-                newStones.append(Int(stoneDigits.suffix(numDigits / 2))!)
+                let left  = Int(stoneDigits.prefix(numDigits / 2))!
+                let right = Int(stoneDigits.suffix(numDigits / 2))!
+                newStoneCounts[left, default: 0] += count
+                newStoneCounts[right, default: 0] += count
             } else {
-                newStones.append(stone * 2024)
+                newStoneCounts[stone * 2024, default: 0] += count
             }
         }
-        return newStones
+        return newStoneCounts
     }
 }
 
