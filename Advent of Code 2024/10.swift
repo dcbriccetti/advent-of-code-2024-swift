@@ -1,6 +1,5 @@
 func day10(for part: Part) throws {
-
-    let grid = try String(contentsOfFile: path + "/10-test.txt", encoding: .utf8)
+    let grid = try String(contentsOfFile: path + "/10.txt", encoding: .utf8)
         .split(separator: "\n")
         .map { line in
             Array(line).map(\.wholeNumberValue!)
@@ -27,10 +26,10 @@ func day10(for part: Part) throws {
         }
     }
 
-    func climb(from location: CoordPair, collecting topLocs: inout Set<CoordPair>) {
+    func climb(from location: CoordPair, collecting topLocs: inout [CoordPair]) {
         let heightHere = grid[location.y][location.x]
         if heightHere == 9 {
-            topLocs.insert(location)
+            topLocs.append(location)
             return
         }
         let nextHeight = heightHere + 1
@@ -40,13 +39,15 @@ func day10(for part: Part) throws {
         }
     }
 
-    let total = trailheads.map { trailhead in
-        var topLocs = Set<CoordPair>()
+    let (sumNumPaths, sumNumUniqueTrailends) = trailheads.map { trailhead in
+        var topLocs = [CoordPair]()
         climb(from: trailhead, collecting: &topLocs)
-        return topLocs.count
-    }.reduce(0, +)
+        let numPaths = topLocs.count
+        let numUniqueTrailends = Set(topLocs).count
+        return (numPaths, numUniqueTrailends)
+    }.reduce((0, 0)) { (result, pair) in
+        (result.0 + pair.0, result.1 + pair.1)
+    }
 
-    print("Total trailhead scores: \(total)")
+    print("Total trailhead scores: \(sumNumPaths), \(sumNumUniqueTrailends)")
 }
-
-
