@@ -5,7 +5,7 @@ func day9(for part: Part) throws {
         var length: Int
         var active = true
     }
-    let chars = try String(contentsOfFile: path + "/9-test.txt", encoding: .utf8)
+    let chars = try String(contentsOfFile: path + "/9.txt", encoding: .utf8)
     let blockCounts = chars.compactMap(\.wholeNumberValue) // compactMap to ignore \n at end
     var fileId = 0
     var part1FileSystem = [Int?]() // Ints are file IDs; nils are free blocks

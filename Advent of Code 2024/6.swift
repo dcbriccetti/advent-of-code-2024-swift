@@ -1,13 +1,8 @@
 func day6(for part: Part) throws {
-    let data = try String(contentsOfFile: path + "/6-test.txt", encoding: .utf8)
+    let data = try String(contentsOfFile: path + "/6.txt", encoding: .utf8)
     let lines = data.split(separator: "\n")
     let numRows = lines.count
     let numCols = lines.first!.count
-
-    struct CoordPair: Hashable {
-        let y: Int
-        let x: Int
-    }
 
     enum Direction: Int, CaseIterable {
         case up, right, down, left
