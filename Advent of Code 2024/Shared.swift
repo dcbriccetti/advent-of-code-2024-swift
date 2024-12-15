@@ -10,6 +10,14 @@ enum Part {
 struct CoordPair: Hashable {
     let y: Int
     let x: Int
+
+    func plus(coordPair: CoordPair) -> CoordPair {
+        return CoordPair(y: y + coordPair.y, x: x + coordPair.x)
+    }
+
+    func validIn(height: Int, width: Int) -> Bool {
+        y >= 0 && x >= 0 && y < height && x < width
+    }
 }
 
 // Read a file and parse its contents into a 2D array of Ints
