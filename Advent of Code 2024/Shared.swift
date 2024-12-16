@@ -7,31 +7,31 @@ enum Part {
     case part2
 }
 
-struct CoordPair: Hashable, CustomStringConvertible {
+struct Vector: Hashable, CustomStringConvertible {
 
     let y: Int
     let x: Int
 
     var description: String { "(y: \(y), x: \(x))" }
 
-    static func + (left: CoordPair, right: CoordPair) -> CoordPair {
-        return CoordPair(y: left.y + right.y, x: left.x + right.x)
+    static func + (left: Vector, right: Vector) -> Vector {
+        return Vector(y: left.y + right.y, x: left.x + right.x)
     }
 
-    static func - (left: CoordPair, right: CoordPair) -> CoordPair {
-        return CoordPair(y: left.y - right.y, x: left.x - right.x)
+    static func - (left: Vector, right: Vector) -> Vector {
+        return Vector(y: left.y - right.y, x: left.x - right.x)
     }
 
-    static func * (left: CoordPair, right: CoordPair) -> CoordPair {
-        return CoordPair(y: left.y * right.y, x: left.x * right.x)
+    static func * (left: Vector, right: Vector) -> Vector {
+        return Vector(y: left.y * right.y, x: left.x * right.x)
     }
 
-    static func += (left: inout CoordPair, right: CoordPair) {
+    static func += (left: inout Vector, right: Vector) {
         left = left + right
     }
 
-    static prefix func - (coord: CoordPair) -> CoordPair {
-        return CoordPair(y: -coord.y, x: -coord.x)
+    static prefix func - (coord: Vector) -> Vector {
+        return Vector(y: -coord.y, x: -coord.x)
     }
 
     func validIn(height: Int, width: Int) -> Bool {

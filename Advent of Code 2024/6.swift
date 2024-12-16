@@ -13,15 +13,15 @@ func day6(for part: Part) throws {
     }
 
     struct Visit: Hashable {
-        let pos: CoordPair
+        let pos: Vector
         let direction: Direction
     }
 
     let (startingGuardPosition, obstacles) = lines.enumerated()
-        .reduce(into: (guardPos: CoordPair(y: 0, x: 0), obstacles: Set<CoordPair>())) { result, row in
+        .reduce(into: (guardPos: Vector(y: 0, x: 0), obstacles: Set<Vector>())) { result, row in
             let (rowIndex, line) = row
             Array(line).enumerated().forEach { colIndex, ch in
-                let pos = CoordPair(y: rowIndex, x: colIndex)
+                let pos = Vector(y: rowIndex, x: colIndex)
                 if ch == "^" {
                     result.guardPos = pos
                 } else if ch == "#" {
@@ -35,13 +35,13 @@ func day6(for part: Part) throws {
     // generate all possible CoordPairs, not including where the guard is
     let pairs = Array(0..<numRows).flatMap { row in
         Array(0..<numCols).compactMap { col in
-            let p = CoordPair(y: row, x: col)
+            let p = Vector(y: row, x: col)
             return startingGuardPosition != p ? p : nil
         }
     }
-    let obstacleSets: [Set<CoordPair>] = part == .part1 ? [obstacles] :
+    let obstacleSets: [Set<Vector>] = part == .part1 ? [obstacles] :
     pairs.map { pair in
-        obstacles.union([CoordPair(y: pair.y, x: pair.x)])
+        obstacles.union([Vector(y: pair.y, x: pair.x)])
     }
 
     var loops = 0
@@ -61,7 +61,7 @@ func day6(for part: Part) throws {
             if nextRowIndex < 0 || nextRowIndex >= numRows || nextColIndex < 0 || nextColIndex >= numCols {
                 break
             }
-            let nextPos = CoordPair(y: nextRowIndex, x: nextColIndex)
+            let nextPos = Vector(y: nextRowIndex, x: nextColIndex)
             if obstacleSet.contains(nextPos) {
                 direction = direction.toRight()
             } else {

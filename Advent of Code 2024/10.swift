@@ -6,10 +6,10 @@ func day10(for part: Part) throws {
         }
     let numRows = grid.count
     let numCols = grid[0].count
-    let allCoordinatePairs: [CoordPair] = (0..<grid.count).flatMap { rowIndex in
-        (0..<grid[0].count).map { colIndex in CoordPair(y: rowIndex, x: colIndex) }
+    let allCoordinatePairs: [Vector] = (0..<grid.count).flatMap { rowIndex in
+        (0..<grid[0].count).map { colIndex in Vector(y: rowIndex, x: colIndex) }
     }
-    let trailheads: [CoordPair] = allCoordinatePairs.filter { pair in
+    let trailheads: [Vector] = allCoordinatePairs.filter { pair in
         grid[pair.y][pair.x] == 0
     }
 
@@ -17,16 +17,16 @@ func day10(for part: Part) throws {
                   (-1,  0),
         ( 0, -1), /* 🔎 */  ( 0, +1),
                   (+1,  0),
-    ].map { CoordPair(y: $0.0, x: $0.1) }
+    ].map { Vector(y: $0.0, x: $0.1) }
 
-    func cellsAround(_ coord: CoordPair) -> [CoordPair] {
+    func cellsAround(_ coord: Vector) -> [Vector] {
         return neighborDeltas.compactMap { delta in
             let newCoord = coord + delta
             return newCoord.validIn(height: numRows, width: numCols) ? newCoord : nil
         }
     }
 
-    func climb(from location: CoordPair, collecting topLocs: inout [CoordPair]) {
+    func climb(from location: Vector, collecting topLocs: inout [Vector]) {
         let heightHere = grid[location.y][location.x]
         if heightHere == 9 {
             topLocs.append(location)
@@ -40,7 +40,7 @@ func day10(for part: Part) throws {
     }
 
     let (sumNumPaths, sumNumUniqueTrailends) = trailheads.map { trailhead in
-        var topLocs = [CoordPair]()
+        var topLocs = [Vector]()
         climb(from: trailhead, collecting: &topLocs)
         let numPaths = topLocs.count
         let numUniqueTrailends = Set(topLocs).count
