@@ -7,12 +7,31 @@ enum Part {
     case part2
 }
 
-struct CoordPair: Hashable {
+struct CoordPair: Hashable, CustomStringConvertible {
+
     let y: Int
     let x: Int
 
-    func plus(coordPair: CoordPair) -> CoordPair {
-        return CoordPair(y: y + coordPair.y, x: x + coordPair.x)
+    var description: String { "(y: \(y), x: \(x))" }
+
+    static func + (left: CoordPair, right: CoordPair) -> CoordPair {
+        return CoordPair(y: left.y + right.y, x: left.x + right.x)
+    }
+
+    static func - (left: CoordPair, right: CoordPair) -> CoordPair {
+        return CoordPair(y: left.y - right.y, x: left.x - right.x)
+    }
+
+    static func * (left: CoordPair, right: CoordPair) -> CoordPair {
+        return CoordPair(y: left.y * right.y, x: left.x * right.x)
+    }
+
+    static func += (left: inout CoordPair, right: CoordPair) {
+        left = left + right
+    }
+
+    static prefix func - (coord: CoordPair) -> CoordPair {
+        return CoordPair(y: -coord.y, x: -coord.x)
     }
 
     func validIn(height: Int, width: Int) -> Bool {

@@ -21,7 +21,7 @@ func day10(for part: Part) throws {
 
     func cellsAround(_ coord: CoordPair) -> [CoordPair] {
         return neighborDeltas.compactMap { delta in
-            let newCoord = coord.plus(coordPair: delta)
+            let newCoord = coord + delta
             return newCoord.validIn(height: numRows, width: numCols) ? newCoord : nil
         }
     }
