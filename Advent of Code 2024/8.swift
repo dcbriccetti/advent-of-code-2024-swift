@@ -34,13 +34,12 @@ func day8(for part: Part) throws {
     }
 
     func displayAntinodes(_ antinodes: [Vector]) {
-        for r in 0..<numRows {
-            for c in 0..<numCols {
-                print(antinodes.contains(Vector(y: r, x: c)) ? "#" : ".", terminator: "")
-            }
-            print()
-        }
-        print()
+        let output = (0..<numRows).map { r in
+            (0..<numCols).map { c in
+                antinodes.contains(Vector(y: r, x: c)) ? "#" : "."
+            }.joined()
+        }.joined(separator: "\n")
+        print(output)
     }
 
     print(Set(antinodes).count)
