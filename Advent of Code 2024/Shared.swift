@@ -64,7 +64,3 @@ func readFileTo2DArray(from filename: String) throws -> [[Int]] {
                 .compactMap { Int($0) }
         }
 }
-
-func extractAndSortColumns(from data: [[Int]]) -> ([Int], [Int]) {
-    (data.map { $0[0] }.sorted(), data.map { $0[1] }.sorted())
-}

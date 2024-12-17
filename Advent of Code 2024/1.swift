@@ -1,6 +1,6 @@
 func day1() throws {
     let data: [[Int]] = try readFileTo2DArray(from: path + "1-test.txt")
-    let (col1, col2) = extractAndSortColumns(from: data)
+    let (col1, col2) = (data.map { $0[0] }.sorted(), data.map { $0[1] }.sorted())
     let differences = zip(col1, col2).map { abs($0 - $1) }
     let sumOfDifferences = differences.reduce(0, +)
     print("Sum of Differences:", sumOfDifferences)
