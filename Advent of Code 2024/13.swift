@@ -19,9 +19,9 @@ func day13(for part: Part) {
 
             let nums = extractIntegers(from: textData)
             return Machine(
-                buttonA: Vector(y: nums[1], x: nums[0]),
-                buttonB: Vector(y: nums[3], x: nums[2]),
-                prize:   Vector(y: nums[5], x: nums[4])
+                buttonA: Vector(x: nums[0], y: nums[1]),
+                buttonB: Vector(x: nums[2], y: nums[3]),
+                prize:   Vector(x: nums[4], y: nums[5])
             )
         }
     }

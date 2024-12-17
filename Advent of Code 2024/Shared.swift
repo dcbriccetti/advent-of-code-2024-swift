@@ -8,11 +8,23 @@ enum Part {
 }
 
 struct Vector: Hashable, CustomStringConvertible {
-
     let y: Int
     let x: Int
+    let xyOrder: Bool
 
-    var description: String { "(y: \(y), x: \(x))" }
+    init(y: Int, x: Int) {
+        self.y = y
+        self.x = x
+        self.xyOrder = false
+    }
+
+    init(x: Int, y: Int) {
+        self.y = y
+        self.x = x
+        self.xyOrder = true
+    }
+
+    var description: String { xyOrder ? "(x: \(x), y: \(y))" : "(y: \(y), x: \(x))" }
 
     static func + (left: Vector, right: Vector) -> Vector {
         return Vector(y: left.y + right.y, x: left.x + right.x)
