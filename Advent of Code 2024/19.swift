@@ -2,7 +2,7 @@ import Foundation
 
 func day19(for part: Part) {
     func getInput() -> (patterns: [String], designs: [String]) {
-        let parts = try! String(contentsOfFile: path + "/19-test.txt", encoding: .utf8)
+        let parts = try! String(contentsOfFile: path + "/19.txt", encoding: .utf8)
             .split(separator: "\n\n")
         let patterns = parts[0]
             .split(separator: ", ")
@@ -15,23 +15,23 @@ func day19(for part: Part) {
 
     let (patterns, designs) = getInput()
 
-    var memo = [String: Bool]()
+    var memo = [String: Int]()
 
-    func canMatch(_ design: String) -> Bool {
+    func countMatches(_ design: String) -> Int {
         if let cached = memo[design] { return cached }
-        if design.isEmpty {
-            memo[design] = true
-            return true
+        guard !design.isEmpty else {
+            memo[design] = 1
+            return 1
         }
-        let matches = patterns.filter { design.starts(with: $0) }
-        let mb = matches.map { match in
-            canMatch(String(design.dropFirst(match.count)))
-        }
-        let foundMatch = mb.contains(true)
-        memo[design] = foundMatch
-        return foundMatch
+        let numMatches = patterns
+            .filter { design.starts(with: $0) }
+            .reduce(into: 0) { result, match in
+                result += countMatches(String(design.dropFirst(match.count)))
+            }
+        memo[design] = numMatches
+        return numMatches
     }
 
-    let num = designs.compactMap { canMatch($0) ? 1 : nil }.count
+    let num = designs.map { countMatches($0) }.reduce(0, +)
     print(num)
 }
